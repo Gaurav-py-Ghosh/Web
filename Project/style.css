@@ -8,6 +8,7 @@ body {
 .container {
     width: 95%; 
     margin: 0 auto;
+    max-width: 1200px; /* Added to prevent excessive stretching on large screens */
 }
 
 header {
@@ -20,6 +21,7 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap; /* Ensures items wrap on small screens */
 }
 
 .logo img {
@@ -38,12 +40,14 @@ nav {
     align-items: center;
     justify-content: flex-end;
     flex-grow: 1;
+    flex-wrap: wrap; /* Ensure items wrap on smaller screens */
 }
 
 .nav-links {
     display: flex;
     align-items: center;
     margin-right: 20px;
+    flex-wrap: wrap; /* Wrap links if needed */
 }
 
 .nav-links a {
@@ -86,6 +90,20 @@ h1 {
     display: flex;
     justify-content: space-around;
     margin-top: 50px;
+    flex-wrap: wrap; /* Added to allow flexibility on smaller screens */
+}
+
+.user-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px; /* Spacing for better mobile experience */
+}
+
+.user-icon {
+    width: 300px; /* Adjusted for smaller screens */
+    height: 250px;
+    margin-bottom: 20px;
 }
 
 .user-btn {
@@ -111,13 +129,15 @@ h1 {
     display: flex;
     justify-content: space-around;
     margin-top: 30px;
+    flex-wrap: wrap; /* Allows wrapping on smaller screens */
 }
 
 .card {
     background-color: #f0f8ff;
     padding: 20px;
     border-radius: 5px;
-    width: 25%;
+    width: 30%; /* Default width for larger screens */
+    margin-bottom: 20px;
 }
 
 .card:hover {
@@ -126,7 +146,7 @@ h1 {
 }
 
 .newsletter {
-    background-color: rgb(0, 160, 160); /* Match this green color */
+    background-color: rgb(0, 160, 160);
     color: #fff;
     padding: 50px 0;
     text-align: center;
@@ -137,24 +157,25 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    max-width: 100%;
-    margin: 0 auto;
-    position: relative;
-    z-index: 2;
+    flex-wrap: wrap; /* Allow form and text to stack on smaller screens */
 }
 
 .text-container {
     text-align: left;
+    flex-basis: 50%;
 }
 
 form {
     display: flex;
     align-items: center;
+    flex-basis: 40%;
+    justify-content: center; /* Center form on smaller screens */
 }
 
 input[type="email"] {
     padding: 10px;
-    width: 300px;
+    width: 100%; /* Responsive width */
+    max-width: 300px; /* Maintain max width */
     margin-right: 10px;
     border-radius: 5px;
     border: none;
@@ -178,8 +199,8 @@ input[type="email"] {
 
 .plant-decoration {
     position: absolute;
-    bottom: 150px; /* Increased from 0 to 50px to move it up */
-    right: 50px;
+    bottom: 50px; /* Reduced height to accommodate small screens */
+    right: 20px;
 }
 
 .plant-decoration img {
@@ -187,42 +208,65 @@ input[type="email"] {
     height: auto;
 }
 
-
 footer {
     background-color: #333;
     color: #fff;
     padding: 20px 0;
     text-align: center;
 }
-.user-type {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 50px;
+
+/* Media Queries for Responsiveness */
+
+@media (max-width: 768px) {
+    .nav-links a {
+        margin-left: 10px; /* Reduce space between links */
+    }
+
+    .hero img {
+        width: 100%; /* Make hero image responsive */
+        height: auto;
+    }
+
+    .user-type {
+        flex-direction: column; /* Stack user type on smaller screens */
+    }
+
+    .user-icon {
+        width: 250px; /* Further adjust icon sizes */
+        height: 200px;
+    }
+
+    .service-cards {
+        flex-direction: column; /* Stack services vertically */
+        align-items: center;    /* Center the service cards */
+    }
+
+    .card {
+        width: 80%; /* Increase card width for smaller screens */
+        margin-bottom: 20px; /* Add margin between stacked cards */
+    }
+
+    .newsletter-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .plant-decoration {
+        display: none; /* Hide plant decoration on small screens */
+    }
 }
 
-.user-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+@media (max-width: 480px) {
+    h1 {
+        font-size: 24px; /* Adjust font size for smaller screens */
+    }
 
-.user-icon {
-    width: 500px; /* Increased the size of the image */
-    height: 400px;
-    margin-bottom: 20px; 
-}
+    .user-btn {
+        padding: 10px 20px; /* Reduce button padding */
+    }
 
-.user-btn {
-    background-color: #fff;
-    border: 2px solid #00a0a0;
-    padding: 20px 40px;
-    font-size: 18px;
-    cursor: pointer;
+    .user-icon {
+        width: 200px; /* Adjust icon size */
+        height: 150px;
+    }
 }
-
-.user-btn:hover {
-    background-color: #00a0a0;
-    border: 2px solid #ffffff;
-    color: white;
-}
-
