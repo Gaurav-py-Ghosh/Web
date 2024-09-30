@@ -194,3 +194,35 @@ footer {
     padding: 20px 0;
     text-align: center;
 }
+.user-type {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 50px;
+}
+
+.user-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.user-icon {
+    width: 500px; /* Increased the size of the image */
+    height: 400px;
+    margin-bottom: 20px; 
+}
+
+.user-btn {
+    background-color: #fff;
+    border: 2px solid #00a0a0;
+    padding: 20px 40px;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+.user-btn:hover {
+    background-color: #00a0a0;
+    border: 2px solid #ffffff;
+    color: white;
+}
+
