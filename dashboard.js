@@ -1,5 +1,35 @@
+// Global variable to store the loaded data
+let organData = null;
+
+// Load the organ data
+async function loadOrganData() {
+    try {
+        const response = await fetch('organ-data.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        organData = await response.json();
+        // Initialize the default tab after data is loaded
+        updateOrganContent('heart');
+    } catch (error) {
+        console.error('Error loading organ data:', error);
+        showErrorMessage('Failed to load organ data. Please try again later.');
+    }
+}
+
+// Error message display function
+function showErrorMessage(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.className = 'warning-box';
+    errorDiv.innerHTML = `<h4>⚠️ Error</h4><p>${message}</p>`;
+    document.querySelector('.main-content').prepend(errorDiv);
+}
+
+// Event listeners for tab switching
 document.querySelectorAll('.record-tab').forEach(tab => {
     tab.addEventListener('click', () => {
+        if (!organData) return; // Prevent switching if data isn't loaded
+
         // Update tab styles
         document.querySelector('.record-tab.active').classList.remove('active');
         tab.classList.add('active');
@@ -9,66 +39,64 @@ document.querySelectorAll('.record-tab').forEach(tab => {
         document.querySelector('.organ-content.active').classList.remove('active');
         document.getElementById(`${organ}-content`).classList.add('active');
 
-        // Initialize or update charts based on the active tab
-        initializeCharts(organ);
+        // Update content and initialize charts
+        updateOrganContent(organ);
     });
 });
 
-function initializeCharts(organ) {
-    if (organ === 'heart') {
-        initHeartChart();
-    } else if (organ === 'brain') {
-        initBrainChart();
-    } else if (organ === 'kidney') {
-        initKidneyChart();
-    } else if (organ === 'eyes') {
-        initEyesChart();
+function updateOrganContent(organ) {
+    if (!organData || !organData[organ]) return;
+
+    const data = organData[organ];
+    const content = document.getElementById(`${organ}-content`);
+
+    // Update organ icon and scan information
+    content.querySelector('.placeholder-img').textContent = data.icon;
+    content.querySelector('.organ-visual h3').textContent = data.scanType;
+    content.querySelector('.scan-image').textContent = data.scanLabel;
+
+    // Update metrics and initialize charts
+    updateMetrics(organ, data);
+}
+
+function updateMetrics(organ, data) {
+    const content = document.getElementById(`${organ}-content`);
+    
+    // Clear existing charts
+    Chart.helpers.each(Chart.instances, (instance) => {
+        instance.destroy();
+    });
+
+    // Update metrics based on organ type
+    switch(organ) {
+        case 'heart':
+            updateHeartMetrics(content, data);
+            break;
+        case 'brain':
+            updateBrainMetrics(content, data);
+            break;
+        case 'kidney':
+            updateKidneyMetrics(content, data);
+            break;
+        case 'eyes':
+            updateEyeMetrics(content, data);
+            break;
     }
 }
 
-function initHeartChart() {
-    const ctx = document.getElementById('heartRateChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
+function createChart(ctx, chartData) {
+    return new Chart(ctx, {
+        type: chartData.type,
         data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            labels: chartData.labels,
             datasets: [{
-                label: 'Heart Rate (BPM)',
-                data: [72, 75, 82, 78, 76, 80, 81],
+                label: chartData.label,
+                data: chartData.data,
                 borderColor: '#45B1A8',
-                tension: 0.4,
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: false,
-                    min: 60,
-                    max: 100
-                }
-            }
-        }
-    });
-}
-
-function initBrainChart() {
-    const ctx = document.getElementById('brainActivityChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Alpha', 'Beta', 'Theta', 'Delta'],
-            datasets: [{
-                label: 'Brain Wave Activity',
-                data: [65, 82, 45, 70],
                 backgroundColor: '#45B1A8',
-                borderRadius: 5
+                tension: chartData.type === 'line' ? 0.4 : 0,
+                fill: false,
+                borderRadius: chartData.type === 'bar' ? 5 : 0
             }]
         },
         options: {
@@ -80,75 +108,105 @@ function initBrainChart() {
             },
             scales: {
                 y: {
-                    beginAtZero: true,
-                    max: 100
+                    beginAtZero: chartData.yAxisMin === 0,
+                    min: chartData.yAxisMin,
+                    max: chartData.yAxisMax
                 }
             }
         }
     });
 }
 
-function initKidneyChart() {
-    const ctx = document.getElementById('kidneyFunctionChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-            datasets: [{
-                label: 'Filtration Rate',
-                data: [92, 94, 93, 95, 94, 95],
-                borderColor: '#45B1A8',
-                tension: 0.4,
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: false,
-                    min: 80,
-                    max: 100
-                }
-            }
-        }
-    });
+function updateHeartMetrics(content, data) {
+    const ctx = content.querySelector('#heartRateChart').getContext('2d');
+    createChart(ctx, data.metrics.heartRate.chartData);
+    
+    // Update other metrics
+    content.querySelector('.stat-box:nth-child(2) p').textContent = data.metrics.bloodPressure.value;
+    content.querySelector('.stat-box:nth-child(3) p').textContent = data.metrics.pulse.value;
+    
+    // Update foods to avoid
+    const foodsGrid = content.querySelector('.foods-grid');
+    foodsGrid.innerHTML = data.foodsToAvoid.map(food => `
+        <div class="food-item">
+            <div class="placeholder-img">${food.icon}</div>
+            <p>${food.name}</p>
+        </div>
+    `).join('');
 }
 
-function initEyesChart() {
-    const ctx = document.getElementById('screenTimeChart').getContext('2d');
-    new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-            datasets: [{
-                label: 'Screen Time (hours)',
-                data: [6.5, 7.2, 6.8, 7.5, 6.2, 4.5, 4.8],
-                backgroundColor: '#45B1A8',
-                borderRadius: 5
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 10
-                }
-            }
-        }
-    });
+function updateBrainMetrics(content, data) {
+    const ctx = content.querySelector('#brainActivityChart').getContext('2d');
+    createChart(ctx, data.metrics.neuralActivity.chartData);
+    
+    // Update cognitive tests
+    const cognitiveTests = content.querySelector('.stat-box:nth-child(2)');
+    cognitiveTests.innerHTML = `
+        <h3>${data.metrics.cognitiveTests.title}</h3>
+        ${data.metrics.cognitiveTests.values.map(test => `
+            <p>${test.label}: ${test.value}</p>
+        `).join('')}
+    `;
+    
+    // Update sleep quality
+    const sleepQuality = content.querySelector('.stat-box:nth-child(3)');
+    sleepQuality.innerHTML = `
+        <h3>${data.metrics.sleepQuality.title}</h3>
+        ${data.metrics.sleepQuality.values.map(item => `
+            <p>${item.label}: ${item.value}</p>
+        `).join('')}
+    `;
+    
+    // Update recommendations
+    const recommendations = content.querySelector('.warning-box');
+    recommendations.innerHTML = `
+        <h4>⚠️ Recommendations</h4>
+        ${data.recommendations.map(rec => `<p>${rec}</p>`).join('')}
+    `;
 }
 
-// Initialize charts for the default active tab (heart)
-initializeCharts('heart');
+function updateKidneyMetrics(content, data) {
+    const ctx = content.querySelector('#kidneyFunctionChart').getContext('2d');
+    createChart(ctx, data.metrics.kidneyFunction.chartData);
+    
+    // Update measurements
+    const metricsGrid = content.querySelector('.metrics-grid');
+    metricsGrid.innerHTML = data.metrics.measurements.map(metric => `
+        <div class="stat-box">
+            <h3>${metric.title}</h3>
+            <p>${metric.value}</p>
+        </div>
+    `).join('');
+    
+    // Update hydration status
+    const hydrationBox = content.querySelector('.warning-box');
+    hydrationBox.innerHTML = `
+        <h4>💧 Hydration Status</h4>
+        <p>Current: ${data.hydrationStatus.current}</p>
+        <p>Recommendation: ${data.hydrationStatus.recommendation}</p>
+    `;
+}
+
+function updateEyeMetrics(content, data) {
+    const ctx = content.querySelector('#screenTimeChart').getContext('2d');
+    createChart(ctx, data.metrics.screenTime.chartData);
+    
+    // Update vision metrics
+    const metricsGrid = content.querySelector('.metrics-grid');
+    metricsGrid.innerHTML = data.metrics.vision.map(metric => `
+        <div class="stat-box">
+            <h3>${metric.title}</h3>
+            <p>${metric.value}</p>
+        </div>
+    `).join('');
+    
+    // Update eye care tips
+    const tipsBox = content.querySelector('.warning-box');
+    tipsBox.innerHTML = `
+        <h4>👀 Eye Care Tips</h4>
+        ${data.eyeCareTips.map(tip => `<p>${tip}</p>`).join('')}
+    `;
+}
+
+// Load the data when the page loads
+document.addEventListener('DOMContentLoaded', loadOrganData);
