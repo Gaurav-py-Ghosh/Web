@@ -1,0 +1,476 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Profile - VitaCare</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            color: #2b7a78;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .book-btn {
+            background-color: #2b7a78;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .profile-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .doctor-selector {
+            margin-bottom: 2rem;
+        }
+
+        .doctor-selector select {
+            width: 100%;
+            padding: 0.5rem;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .profile-header {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #2b7a78;
+        }
+
+        .profile-info h1 {
+            color: #2b7a78;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-info p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2b7a78;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .profile-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+        }
+
+        .about-section h2 {
+            color: #2b7a78;
+            margin-bottom: 1rem;
+        }
+
+        .about-section p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .booking-section {
+            background: #f9f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .booking-section h3 {
+            color: #2b7a78;
+            margin-bottom: 1rem;
+        }
+
+        .time-slots {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .time-slot {
+            padding: 0.5rem;
+            text-align: center;
+            border: 1px solid #2b7a78;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .time-slot:hover {
+            background: #2b7a78;
+            color: white;
+        }
+
+        .time-slot.selected {
+            background: #2b7a78;
+            color: white;
+        }
+
+        #bookingForm {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        #bookingForm input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        #bookingForm button {
+            background: #2b7a78;
+            color: white;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #bookingForm button:hover {
+            background: #236c6a;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">VitaCare</a>
+        <nav class="nav-links">
+            <a href="/about">About</a>
+            <a href="/services">Services</a>
+            <a href="/news">News</a>
+            <button class="book-btn">BOOK A DOCTOR</button>
+        </nav>
+    </header>
+
+    <main class="profile-container">
+        <div class="doctor-selector">
+            <select id="doctorSelect">
+                <option value="">Select a doctor</option>
+                <option value="1">Dr. Sarah Johnson</option>
+                <option value="2">Dr. Michael Lee</option>
+                <option value="3">Dr. Emily Chen</option>
+            </select>
+        </div>
+
+        <div id="doctorProfile" style="display: none;">
+            <div class="profile-header">
+                <img id="doctorImage" alt="Doctor's profile" class="profile-image">
+                <div class="profile-info">
+                    <h1 id="doctorName"></h1>
+                    <p id="doctorSpecialty"></p>
+                    <p id="doctorQualification"></p>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div id="experienceStat" class="stat-number"></div>
+                            <div class="stat-label">Years Experience</div>
+                        </div>
+                        <div class="stat-item">
+                            <div id="satisfactionStat" class="stat-number"></div>
+                            <div class="stat-label">Patient Satisfaction</div>
+                        </div>
+                        <div class="stat-item">
+                            <div id="patientsStat" class="stat-number"></div>
+                            <div class="stat-label">Patients Treated</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-content">
+                <div class="about-section">
+                    <h2>About <span id="doctorNameAbout"></span></h2>
+                    <p id="doctorAbout"></p>
+                    
+                    <h2>Specializations</h2>
+                    <p id="doctorSpecializations"></p>
+                </div>
+
+                <div class="booking-section">
+                    <h3>Book Appointment</h3>
+                    <form id="bookingForm">
+                        <div class="time-slots">
+                            <div class="time-slot">09:00 AM</div>
+                            <div class="time-slot">10:00 AM</div>
+                            <div class="time-slot">11:00 AM</div>
+                            <div class="time-slot">02:00 PM</div>
+                            <div class="time-slot">03:00 PM</div>
+                            <div class="time-slot">04:00 PM</div>
+                        </div>
+                        <input type="text" placeholder="Your Name" required>
+                        <input type="email" placeholder="Your Email" required>
+                        <input type="tel" placeholder="Your Phone" required>
+                        <button type="submit">Confirm Booking</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Doctor information JSON object
+        const doctors = {
+            "1": {
+                name: "Dr. Sarah Johnson",
+                specialty: "Cardiologist",
+                hospital: "Max Hospital",
+                qualification: "MBBS, MD - Cardiology",
+                experience: "15+",
+                satisfaction: "98%",
+                patientsTreated: "10k+",
+                about: "Dr. Sarah Johnson is a highly experienced cardiologist with over 15 years of practice in treating various heart conditions. She specializes in interventional cardiology and has performed numerous successful procedures throughout her career. She completed her medical education from prestigious institutions and has been associated with Max Hospital for the past decade. Dr. Johnson is known for her patient-centric approach and dedication to providing comprehensive cardiac care.",
+                specializations: [
+                    "Interventional Cardiology",
+                    "Cardiac Rehabilitation",
+                    "Preventive Cardiology",
+                    "Heart Failure Management"
+                ],
+                imageUrl: "/placeholder.svg?height=200&width=200"
+            },
+            "2": {
+                name: "Dr. Michael Lee",
+                specialty: "Neurologist",
+                hospital: "Central Hospital",
+                qualification: "MBBS, MD - Neurology",
+                experience: "12+",
+                satisfaction: "97%",
+                patientsTreated: "8k+",
+                about: "Dr. Michael Lee is a renowned neurologist with over 12 years of experience in diagnosing and treating complex neurological disorders. He has a particular interest in neurodegenerative diseases and has contributed to several groundbreaking research studies. Dr. Lee is committed to providing personalized care and employing the latest treatment modalities for his patients.",
+                specializations: [
+                    "Neurodegenerative Diseases",
+                    "Stroke Management",
+                    "Epilepsy Treatment",
+                    "Headache Disorders"
+                ],
+                imageUrl: "/placeholder.svg?height=200&width=200"
+            },
+            "3": {
+                name: "Dr. Emily Chen",
+                specialty: "Pediatrician",
+                hospital: "Children's Medical Center",
+                qualification: "MBBS, MD - Pediatrics",
+                experience: "10+",
+                satisfaction: "99%",
+                patientsTreated: "15k+",
+                about: "Dr. Emily Chen is a compassionate pediatrician with over a decade of experience in child healthcare. She is known for her gentle approach and ability to connect with young patients. Dr. Chen has extensive experience in managing a wide range of pediatric conditions and is dedicated to promoting children's health and well-being through preventive care and education.",
+                specializations: [
+                    "General Pediatrics",
+                    "Pediatric Immunology",
+                    "Developmental Pediatrics",
+                    "Adolescent Medicine"
+                ],
+                imageUrl: "/placeholder.svg?height=200&width=200"
+            }
+        };
+
+        // Function to populate doctor information
+        function populateDoctorInfo(doctorId) {
+            const doctor = doctors[doctorId];
+            if (!doctor) return;
+
+            document.getElementById('doctorImage').src = doctor.imageUrl;
+            document.getElementById('doctorName').textContent = doctor.name;
+            document.getElementById('doctorSpecialty').textContent = `${doctor.specialty}, ${doctor.hospital}`;
+            document.getElementById('doctorQualification').textContent = doctor.qualification;
+            document.getElementById('experienceStat').textContent = doctor.experience;
+            document.getElementById('satisfactionStat').textContent = doctor.satisfaction;
+            document.getElementById('patientsStat').textContent = doctor.patientsTreated;
+            document.getElementById('doctorNameAbout').textContent = doctor.name;
+            document.getElementById('doctorAbout').textContent = doctor.about;
+            document.getElementById('doctorSpecializations').innerHTML = doctor.specializations.map(spec => `• ${spec}`).join('<br>');
+
+            document.getElementById('doctorProfile').style.display = 'block';
+        }
+
+        // Handle doctor selection
+        document.getElementById('doctorSelect').addEventListener('change', (e) => {
+            const selectedDoctorId = e.target.value;
+            if (selectedDoctorId) {
+                populateDoctorInfo(selectedDoctorId);
+            } else {
+                document.getElementById('doctorProfile').style.display = 'none';
+            }
+        });
+
+        // Handle time slot selection
+        document.querySelectorAll('.time-slot').forEach(slot => {
+            slot.addEventListener('click', () => {
+                document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
+                slot.classList.add('selected');
+            });
+        });
+
+        // Handle form submission
+        document.getElementById('bookingForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const selectedTime = document.querySelector('.time-slot.selected');
+            if (!selectedTime) {
+                alert('Please select a time slot');
+                return;
+            }
+            const selectedDoctor = doctors[document.getElementById('doctorSelect').value];
+            alert(`Appointment booked successfully with ${selectedDoctor.name} at ${selectedTime.textContent}!`);
+            // Here you would typically send the form data to a server
+        });
+    </script>
+</body>
+</html> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctor Profile - VitaCare</title>
+    <style>
+        /* Previous CSS styles remain the same */
+        /* ... */
+    </style>
+</head>
+<body>
+    <!-- Previous HTML structure remains the same -->
+    
+    <script>
+        // Doctor information (same as in the listing page)
+        const doctors = {
+            "dr-shreya": {
+                id: "dr-shreya",
+                name: "Dr. Shreya Sharma",
+                specialty: "Psychologist",
+                hospital: "Max Hospital",
+                // ... rest of the doctor data
+            },
+            "dr-rahul": {
+                id: "dr-rahul",
+                name: "Dr. Rahul Verma",
+                specialty: "Cardiologist",
+                hospital: "Max Hospital",
+                // ... rest of the doctor data
+            },
+            "dr-priya": {
+                id: "dr-priya",
+                name: "Dr. Priya Patel",
+                specialty: "Pediatrician",
+                hospital: "Max Hospital",
+                // ... rest of the doctor data
+            }
+        };
+
+        // Get doctor ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const doctorId = urlParams.get('id');
+
+        // Populate doctor information
+        function populateDoctorInfo(doctorId) {
+            const doctor = doctors[doctorId];
+            if (!doctor) {
+                window.location.href = 'index.html'; // Redirect if doctor not found
+                return;
+            }
+
+            document.getElementById('doctorImage').src = doctor.imageUrl;
+            document.getElementById('doctorName').textContent = doctor.name;
+            document.getElementById('doctorSpecialty').textContent = `${doctor.specialty}, ${doctor.hospital}`;
+            document.getElementById('doctorQualification').textContent = doctor.qualification;
+            document.getElementById('experienceStat').textContent = doctor.experience;
+            document.getElementById('satisfactionStat').textContent = doctor.satisfaction;
+            document.getElementById('patientsStat').textContent = doctor.patientsTreated;
+            document.getElementById('doctorNameAbout').textContent = doctor.name;
+            document.getElementById('doctorAbout').textContent = doctor.about;
+            document.getElementById('doctorSpecializations').innerHTML = doctor.specializations.map(spec => `• ${spec}`).join('<br>');
+            
+            document.title = `${doctor.name} - VitaCare`;
+        }
+
+        // Initialize page
+        if (doctorId) {
+            populateDoctorInfo(doctorId);
+        } else {
+            window.location.href = 'index.html';
+        }
+
+        // Rest of the JavaScript (time slot selection and form handling) remains the same
+    </script>
+</body>
+</html>

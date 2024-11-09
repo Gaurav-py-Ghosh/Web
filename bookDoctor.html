@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book A Doctor - VitaCore</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #4A8B8C;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            width: 95%;
+            max-width: 1300px;
+            padding: 2rem;
+            border-radius: 12px;
+            height: 800px;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .logo {
+            height: 30px;
+        }
+
+        .main-content {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .doctor-image {
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .doctor-image img {
+            padding-top: 50px;
+            width: 500px;
+            height: 500px;
+        }
+
+        .booking-form {
+            flex: 1;
+            background: #4A8B8C;
+            padding: 2rem;
+            border-radius: 20px;
+            color: white;
+        }
+
+        h1 {
+            color: #4A8B8C;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .booking-section{
+            padding-left: 300px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .submit-btn {
+            background: white;
+            color: #4A8B8C;
+            border: none;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .submit-btn:hover {
+            background: #f0f0f0;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+
+            .doctor-image {
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="back-button">←</button>
+            <img src="logo-2.png" alt="VitaCore" class="logo">
+        </div>
+        
+        <div class="main-content">
+            <div class="doctor-image">
+                <img src="new_doc 1.png" alt="Doctor illustration">
+            </div>
+            
+            <div class="booking-section">
+                <h1>BOOK A DOCTOR</h1>
+                
+                <div class="booking-form">
+                    <form id="appointmentForm">
+                        <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="date">Date of Appointment:</label>
+                            <input type="date" id="date" name="date" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="department">Department:</label>
+                            <select id="department" name="department" required>
+                                <option value="">Select Department</option>
+                                <option value="cardiology">Cardiology</option>
+                                <option value="neurology">Neurology</option>
+                                <option value="pediatrics">Pediatrics</option>
+                                <option value="orthopedics">Orthopedics</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="submit-btn">
+                            SUBMIT →
+                        
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('name').value,
+                date: document.getElementById('date').value,
+                department: document.getElementById('department').value
+            };
+            
+            // Here you would typically send the data to a server
+            console.log('Appointment Details:', formData);
+            alert('Appointment booked successfully!');
+            
+            // Reset form
+            this.reset();
+        });
+
+        document.querySelector('.back-button').addEventListener('click', function() {
+            // Here you would typically handle navigation
+            console.log('Back button clicked');
+        });
+    </script>
+</body>
+</html>
